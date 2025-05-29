@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Trello Random Card",
+  "name": "Show a Random Trello Card",
   "version": "1.0",
   "description": "Displays a random card from a specified Trello board in new tabs",
   "permissions": [
