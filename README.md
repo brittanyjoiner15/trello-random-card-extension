@@ -51,42 +51,9 @@ Display a random card from your Trello board every time you open a new tab. Perf
 - Secure storage of your Trello credentials
 - Clean, modern design with smooth animations
 
-## Development
-
-### Project Structure
-
-```
-├── icons/              # Extension icons and SVGs
-├── manifest.json       # Extension manifest and configuration
-├── newtab.html        # New tab page template
-├── script.js          # Main extension logic
-├── styles.css         # Styling for new tab page
-├── PRIVACY.md         # Privacy policy
-└── README.md          # This file
-```
-
-### Making Changes
-
-1. Follow the Local Installation steps above
-2. Make your changes to the code
-3. Chrome will automatically reload the extension when files change
-4. Open a new tab to test your changes
-
-### Building for Production
-
-To create a ZIP file for Chrome Web Store submission:
-
-```bash
-zip -r extension.zip . -x "*.git*" "*.md" ".DS_Store"
-```
-
 ## Contributing
 
-1. Fork the repository
-2. Create your feature branch: `git checkout -b feature/my-new-feature`
-3. Commit your changes: `git commit -am 'Add some feature'`
-4. Push to the branch: `git push origin feature/my-new-feature`
-5. Submit a pull request
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for development setup instructions and guidelines.
 
 ## Security Note
 

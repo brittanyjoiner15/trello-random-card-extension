@@ -1,4 +1,4 @@
-# Contributing to Trello Random Card Extension
+# Contributing to Show a Random Trello Card
 
 We love your input! We want to make contributing to this extension as easy and transparent as possible, whether it's:
 
@@ -7,6 +7,43 @@ We love your input! We want to make contributing to this extension as easy and t
 - Submitting a fix
 - Proposing new features
 - Becoming a maintainer
+
+## Development Setup
+
+### Project Structure
+
+```
+├── icons/              # Extension icons and SVGs
+├── manifest.json       # Extension manifest and configuration
+├── newtab.html        # New tab page template
+├── script.js          # Main extension logic
+├── styles.css         # Styling for new tab page
+├── PRIVACY.md         # Privacy policy
+└── README.md          # Documentation
+```
+
+### Local Development
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/brittanyjoiner15/trello-random-card-extension.git
+   ```
+
+2. Open Chrome and navigate to `chrome://extensions`
+
+3. Enable "Developer mode" in the top right corner
+
+4. Click "Load unpacked" and select the cloned repository folder
+
+5. Make your changes - Chrome will automatically reload the extension
+
+### Building for Production
+
+To create a ZIP file for Chrome Web Store submission:
+
+```bash
+zip -r extension.zip . -x "*.git*" "*.md" ".DS_Store"
+```
 
 ## We Develop with Github
 We use GitHub to host code, to track issues and feature requests, as well as accept pull requests.
