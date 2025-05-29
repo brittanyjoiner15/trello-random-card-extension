@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Random Trello Card</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="card">
+            <div id="loading" class="loading">Loading...</div>
+            <div id="error" class="error hidden"></div>
+            <div id="content" class="content hidden">
+                <h1 id="cardTitle"></h1>
+                <p id="cardDescription" class="description"></p>
+            </div>
+        </div>
+        <div class="settings-button" id="settingsButton">
+            <img src="icons/settings.svg" alt="Settings" width="24" height="24">
+        </div>
+    </div>
+    <div id="settings" class="settings hidden">
+        <h2>Settings</h2>
+        <div class="form-group">
+            <label for="apiKey">Trello API Key:</label>
+            <input type="text" id="apiKey" placeholder="Enter your Trello API key">
+        </div>
+        <div class="form-group">
+            <label for="token">Trello Token:</label>
+            <input type="text" id="token" placeholder="Enter your Trello token">
+        </div>
+        <div class="form-group">
+            <label for="boardId">Board ID:</label>
+            <input type="text" id="boardId" placeholder="Enter your Trello board ID">
+        </div>
+        <button id="saveSettings">Save Settings</button>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
