@@ -1,18 +1,24 @@
-# Trello Random Card Chrome Extension
+# Show a Random Trello Card - Chrome Extension
 
-This Chrome extension displays a random card from a specified Trello board every time you open a new tab.
+Display a random card from your Trello board every time you open a new tab. Perfect for staying connected with your tasks and ideas!
+
+## Installation
+
+1. Visit the [Chrome Web Store page](https://chrome.google.com/webstore/detail/show-a-random-trello-card) (coming soon)
+2. Click "Add to Chrome"
+3. Click "Add extension" in the popup
 
 ## Setup Instructions
 
-1. Get your Trello API credentials:
-   - Visit https://trello.com/app-key to get your API Key
-   - On the same page, click "Generate a Token" to get your Token
-   - Get your Board ID from the URL of your Trello board (it's the string after /b/ in the URL)
-
-2. Install the extension:
-   - Open Chrome and go to `chrome://extensions/`
-   - Enable "Developer mode" in the top right
-   - Click "Load unpacked" and select this directory
+1. After installation, open a new tab
+2. Click the gear icon (⚙️) in the top right
+3. Get your Trello credentials:
+   - Visit [Trello's API Key page](https://trello.com/app-key)
+   - Copy your API Key
+   - Click "Generate a Token" and copy the token
+   - Get your Board ID from your Trello board URL (it's the string after /b/)
+4. Enter these credentials in the extension settings
+5. Click Save
 
 3. Configure the extension:
    - Open a new tab
