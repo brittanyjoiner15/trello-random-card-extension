@@ -1,3 +1,20 @@
+/* Theme Gradients */
+body.purple-blue {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+body.sunset {
+    background: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%);
+}
+
+body.ocean {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+body.forest {
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+}
+
 body {
     margin: 0;
     padding: 0;
@@ -150,4 +167,50 @@ button {
 
 button:hover {
     background: #764ba2;
+}
+
+/* Theme Selector Styles */
+.theme-options {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.theme-option {
+    cursor: pointer;
+    border-radius: 8px;
+    padding: 2px;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.theme-option:hover {
+    transform: translateY(-2px);
+}
+
+.theme-option.active {
+    border-color: #667eea;
+}
+
+.theme-preview {
+    height: 40px;
+    border-radius: 6px;
+    transition: transform 0.3s ease;
+}
+
+.theme-preview.purple-blue {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.theme-preview.sunset {
+    background: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%);
+}
+
+.theme-preview.ocean {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.theme-preview.forest {
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
 }
