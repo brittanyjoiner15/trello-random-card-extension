@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     const settingsButton = document.getElementById('settingsButton');
     const settingsPanel = document.getElementById('settings');
     const saveSettingsButton = document.getElementById('saveSettings');
@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
             option.classList.toggle('active', option.dataset.theme === currentSettings.theme);
         });
         
-        settingsPanel.style.display = 'block';
+        settingsPanel.classList.remove('hidden');
     });
 
     // Theme selection handling
@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const activeTheme = document.querySelector('.theme-option.active')?.dataset.theme || 'purple-blue';
 
         await chrome.storage.sync.set({ apiKey, token, boardId, theme: activeTheme });
-        settingsPanel.style.display = 'none';
+        settingsPanel.classList.add('hidden');
         location.reload();
     });
 
@@ -109,5 +109,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Initial load
-    fetchRandomCard();
+    const initialSettings = await loadSettings();
+    if (initialSettings.apiKey && initialSettings.token && initialSettings.boardId) {
+        fetchRandomCard(initialSettings);
+    } else {
+        error.classList.remove('hidden');
+        error.textContent = 'Please configure your Trello credentials in settings';
+    }
+    
+    // Apply initial theme
+    applyTheme(initialSettings.theme || 'purple-blue');
 });
