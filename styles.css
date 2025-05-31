@@ -152,6 +152,28 @@ input {
     border: 1px solid #ddd;
     border-radius: 4px;
     font-size: 14px;
+    margin-bottom: 4px;
+}
+
+.field-help {
+    margin: 0;
+    font-size: 12px;
+    color: #666;
+    line-height: 1.4;
+}
+
+.field-help a {
+    color: #667eea;
+    text-decoration: none;
+}
+
+.field-help a:hover {
+    text-decoration: underline;
+}
+
+.field-help strong {
+    color: #333;
+    font-weight: 600;
 }
 
 button {
