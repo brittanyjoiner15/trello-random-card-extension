@@ -6,6 +6,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     const loading = document.getElementById('loading');
     const error = document.getElementById('error');
 
+    // Close settings panel
+    document.getElementById('closeSettings').addEventListener('click', () => {
+        settingsPanel.classList.add('hidden');
+    });
+
     // Toggle settings panel
     settingsButton.addEventListener('click', async () => {
         const currentSettings = await loadSettings();
