@@ -191,6 +191,37 @@ button:hover {
     background: #764ba2;
 }
 
+.feedback-link {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    font-size: 12px;
+}
+
+.feedback-link a {
+    color: #666;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.feedback-link a:hover {
+    color: #667eea;
+    background: rgba(102, 126, 234, 0.1);
+}
+
+.feedback-link svg {
+    transition: transform 0.2s ease;
+}
+
+.feedback-link a:hover svg {
+    transform: scale(1.1);
+}
+
 /* Theme Selector Styles */
 .theme-options {
     display: grid;
