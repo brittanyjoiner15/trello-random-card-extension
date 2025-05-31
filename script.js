@@ -6,9 +6,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     const loading = document.getElementById('loading');
     const error = document.getElementById('error');
 
+    const overlay = document.getElementById('overlay');
+
     // Close settings panel
     document.getElementById('closeSettings').addEventListener('click', () => {
         settingsPanel.classList.add('hidden');
+        overlay.classList.add('hidden');
+    });
+
+    // Close on overlay click
+    overlay.addEventListener('click', () => {
+        settingsPanel.classList.add('hidden');
+        overlay.classList.add('hidden');
     });
 
     // Toggle settings panel
@@ -23,6 +32,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             option.classList.toggle('active', option.dataset.theme === currentSettings.theme);
         });
         
+        overlay.classList.remove('hidden');
         settingsPanel.classList.remove('hidden');
     });
 
