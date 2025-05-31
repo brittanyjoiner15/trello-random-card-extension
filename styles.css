@@ -191,10 +191,14 @@ button:hover {
     background: #764ba2;
 }
 
+.settings-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+}
+
 .feedback-link {
-    position: absolute;
-    bottom: 12px;
-    right: 12px;
     font-size: 12px;
 }
 
