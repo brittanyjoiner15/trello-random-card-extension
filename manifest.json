@@ -4,8 +4,7 @@
   "version": "1.2",
   "description": "Displays a random card from a specified Trello board in new tabs",
   "permissions": [
-    "storage",
-    "tabs"
+    "storage"
   ],
   "host_permissions": [
     "https://api.trello.com/*"
