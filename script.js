@@ -60,7 +60,7 @@ async function authenticateWithTrello() {
 
 async function fetchAndPopulateBoards(token) {
     try {
-        const boardsResponse = await fetch(`https://api.trello.com/1/members/me/boards?key=${TRELLO_API_KEY}&token=${token}`);
+        const boardsResponse = await fetch(`https://api.trello.com/1/members/me/boards?key=${TRELLO_API_KEY}&token=${token}&filter=open`);
         const boards = await boardsResponse.json();
         
         const boardSelect = document.getElementById('boardSelect');
