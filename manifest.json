@@ -4,13 +4,8 @@
   "version": "1.3",
   "description": "Displays a random card from a specified Trello board in new tabs",
   "permissions": [
-    "storage",
-    "identity"
+    "storage"
   ],
-  "oauth2": {
-    "client_id": "${chrome.runtime.id}",
-    "scopes": ["https://api.trello.com/"]
-  },
   "host_permissions": [
     "https://api.trello.com/*",
     "https://trello.com/*"

@@ -162,6 +162,20 @@ h1 {
     border-bottom: 1px solid #eee;
 }
 
+.auth-instructions {
+    margin: 15px 0;
+    padding: 15px;
+    background: #f0f9ff;
+    border: 1px solid #cce5ff;
+    border-radius: 6px;
+}
+
+.auth-instructions p {
+    margin: 8px 0;
+    color: #004085;
+    font-size: 14px;
+}
+
 .auth-button {
     display: flex;
     align-items: center;

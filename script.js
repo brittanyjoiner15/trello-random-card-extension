@@ -1,25 +1,26 @@
 const TRELLO_API_KEY = 'c931bcb711be7cca600a6b2dfcc60f58';
 
 async function authenticateWithTrello() {
-    const redirectURL = chrome.identity.getRedirectURL();
-    const authUrl = `https://trello.com/1/authorize?expiration=never&name=Random%20Card%20Extension&scope=read&response_type=token&key=${TRELLO_API_KEY}&return_url=${encodeURIComponent(redirectURL)}&callback_method=fragment`;
+    const authUrl = `https://trello.com/1/authorize?expiration=never&name=Random%20Card%20Extension&scope=read&response_type=token&key=${TRELLO_API_KEY}`;
     
     try {
-        const token = await new Promise((resolve, reject) => {
-            chrome.identity.launchWebAuthFlow({
-                url: authUrl,
-                interactive: true
-            }, (responseUrl) => {
-                if (chrome.runtime.lastError) {
-                    reject(chrome.runtime.lastError);
-                    return;
-                }
-                // Extract token from the response URL
-                const hashParams = new URLSearchParams(new URL(responseUrl).hash.substr(1));
-                const token = hashParams.get('token');
-                resolve(token);
-            });
-        });
+        // Open Trello authorization in a new tab
+        window.open(authUrl, '_blank');
+        
+        // Show instructions to the user
+        const instructionsDiv = document.createElement('div');
+        instructionsDiv.className = 'auth-instructions';
+        instructionsDiv.innerHTML = `
+            <p>A new tab has opened with Trello's authorization page.</p>
+            <p>1. Click "Allow" in the Trello tab</p>
+            <p>2. Copy the token that appears</p>
+            <p>3. Paste it in the Token field below</p>
+        `;
+        
+        document.getElementById('boardSelector').insertAdjacentElement('beforebegin', instructionsDiv);
+        
+        // Pre-fill the API key
+        document.getElementById('apiKey').value = TRELLO_API_KEY;
 
         if (!token) throw new Error('No token received');
 
