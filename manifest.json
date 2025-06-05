@@ -16,6 +16,10 @@
   "background": {
     "service_worker": "background.js"
   },
+  "web_accessible_resources": [{
+    "resources": ["config.js"],
+    "matches": ["<all_urls>"]
+  }],
   "action": {
     "default_icon": {
       "16": "icons/icon16.png",

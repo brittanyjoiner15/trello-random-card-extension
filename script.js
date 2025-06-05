@@ -1,7 +1,7 @@
-const TRELLO_API_KEY = 'c931bcb711be7cca600a6b2dfcc60f58';
+import config from './config.js';
 
 async function authenticateWithTrello() {
-    const authUrl = `https://trello.com/1/authorize?expiration=never&name=Random%20Card%20Extension&scope=read&response_type=token&key=${TRELLO_API_KEY}`;
+    const authUrl = `https://trello.com/1/authorize?expiration=never&name=Random%20Card%20Extension&scope=read&response_type=token&key=${config.TRELLO_API_KEY}`;
     
     try {
         // Create and show the instructions modal
@@ -66,7 +66,7 @@ async function fetchAndPopulateBoards(token) {
     boardSelect.disabled = true;
     
     try {
-        const boardsResponse = await fetch(`https://api.trello.com/1/members/me/boards?key=${TRELLO_API_KEY}&token=${token}&filter=open`);
+        const boardsResponse = await fetch(`https://api.trello.com/1/members/me/boards?key=${config.TRELLO_API_KEY}&token=${token}&filter=open`);
         const boards = await boardsResponse.json();
         
         // Update with boards
@@ -181,7 +181,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
 
             const response = await fetch(
-                `https://api.trello.com/1/boards/${boardId}/cards?key=${TRELLO_API_KEY}&token=${token}`
+                `https://api.trello.com/1/boards/${boardId}/cards?key=${config.TRELLO_API_KEY}&token=${token}`
             );
 
             if (!response.ok) {
@@ -198,7 +198,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             // Get list information
             const listResponse = await fetch(
-                `https://api.trello.com/1/lists/${randomCard.idList}?key=${TRELLO_API_KEY}&token=${token}`
+                `https://api.trello.com/1/lists/${randomCard.idList}?key=${config.TRELLO_API_KEY}&token=${token}`
             );
 
             if (!listResponse.ok) {
