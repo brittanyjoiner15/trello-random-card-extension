@@ -1,13 +1,14 @@
 {
   "manifest_version": 3,
   "name": "Show a Random Trello Card",
-  "version": "1.2",
+  "version": "1.3",
   "description": "Displays a random card from a specified Trello board in new tabs",
   "permissions": [
     "storage"
   ],
   "host_permissions": [
-    "https://api.trello.com/*"
+    "https://api.trello.com/*",
+    "https://trello.com/*"
   ],
   "chrome_url_overrides": {
     "newtab": "newtab.html"
@@ -15,6 +16,10 @@
   "background": {
     "service_worker": "background.js"
   },
+  "web_accessible_resources": [{
+    "resources": ["config.js"],
+    "matches": ["<all_urls>"]
+  }],
   "action": {
     "default_icon": {
       "16": "icons/icon16.png",

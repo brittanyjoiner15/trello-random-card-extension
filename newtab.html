@@ -29,25 +29,39 @@
             </svg>
         </button>
         <h2>Settings</h2>
-        <div class="form-group">
-            <label for="apiKey">Trello API Key:</label>
-            <input type="text" id="apiKey" placeholder="Enter your Trello API key">
-            <p class="field-help">Get your API key from <a href="https://trello.com/power-ups/admin/new"
-                    target="_blank">Trello's
-                    Power-Up Admin page</a>. <a href="https://youtu.be/RDg3TYFDuzg" target="_blank">Watch
-                    a walkthrough</a>.</p>
-        </div>
-        <div class="form-group">
-            <label for="token">Trello Token:</label>
-            <input type="text" id="token" placeholder="Enter your Trello token">
-            <p class="field-help">Click "Generate a Token" on the API Key page to get your token</p>
-        </div>
-        <div class="form-group">
-            <label for="boardId">Board ID:</label>
-            <input type="text" id="boardId" placeholder="Enter your Trello board ID">
-            <p class="field-help">Found by going to your board, typing `.json` at the end of the url, then copying the
-                value in quotes after "id". <a href="https://youtu.be/wYrfvFhnkXM" target="_blank">Watch a
-                    walkthrough</a>.</p>
+        <div class="auth-section">
+            <div id="authStatus" class="auth-status hidden">
+                <div class="auth-status-content">
+                    <svg class="check-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                        <polyline points="22 4 12 14.01 9 11.01" />
+                    </svg>
+                    <span>You're authorized!</span>
+                </div>
+                <button id="signOutButton" class="sign-out-button">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                        <polyline points="16 17 21 12 16 7" />
+                        <line x1="21" y1="12" x2="9" y2="12" />
+                    </svg>
+                    Sign Out
+                </button>
+            </div>
+            <button id="authButton" class="auth-button">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+                    <polyline points="10 17 15 12 10 7" />
+                    <line x1="15" y1="12" x2="3" y2="12" />
+                </svg>
+                Authenticate with Trello
+            </button>
+            <div id="boardSelector" class="board-selector hidden">
+                <label for="boardSelect">Select a Board:</label>
+                <select id="boardSelect" class="board-select"></select>
+            </div>
         </div>
         <div class="form-group">
             <label>Theme:</label>
@@ -81,7 +95,7 @@
         </div>
         </div>
     </div>
-    <script src="script.js"></script>
+    <script type="module" src="script.js"></script>
 </body>
 
 </html>
