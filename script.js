@@ -149,17 +149,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         location.reload();
     });
 
-    // Load settings
-    async function loadSettings() {
-        const result = await chrome.storage.sync.get(['apiKey', 'token', 'boardId', 'theme']);
-        return {
-            apiKey: result.apiKey || '',
-            token: result.token || '',
-            boardId: result.boardId || '',
-            theme: result.theme || 'purple-blue'
-        };
-    }
-
     // Apply theme
     function applyTheme(theme) {
         // Remove all theme classes
@@ -169,14 +158,24 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // Fetch random card
-    async function fetchRandomCard(settings) {
+    async function fetchRandomCard() {
         loading.classList.remove('hidden');
         content.classList.add('hidden');
         error.classList.add('hidden');
 
         try {
+            const { token, boardId } = await new Promise((resolve, reject) => {
+                chrome.storage.local.get(['token', 'boardId'], (result) => {
+                    if (result.token && result.boardId) {
+                        resolve(result);
+                    } else {
+                        reject(new Error('Please configure your Trello settings'));
+                    }
+                });
+            });
+
             const response = await fetch(
-                `https://api.trello.com/1/boards/${settings.boardId}/cards?key=${settings.apiKey}&token=${settings.token}`
+                `https://api.trello.com/1/boards/${boardId}/cards?key=${TRELLO_API_KEY}&token=${token}`
             );
 
             if (!response.ok) {
@@ -191,9 +190,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             const randomCard = cards[Math.floor(Math.random() * cards.length)];
 
-            // Get the list name
+            // Get list information
             const listResponse = await fetch(
-                `https://api.trello.com/1/lists/${randomCard.idList}?key=${settings.apiKey}&token=${settings.token}`
+                `https://api.trello.com/1/lists/${randomCard.idList}?key=${TRELLO_API_KEY}&token=${token}`
             );
 
             if (!listResponse.ok) {
@@ -216,14 +215,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // Initial load
-    const initialSettings = await loadSettings();
-    if (initialSettings.apiKey && initialSettings.token && initialSettings.boardId) {
-        fetchRandomCard(initialSettings);
-    } else {
-        error.classList.remove('hidden');
-        error.textContent = 'Please configure your Trello credentials in settings';
-    }
+    chrome.storage.local.get(['token', 'boardId', 'theme'], (result) => {
+        if (result.token && result.boardId) {
+            fetchRandomCard();
+        } else {
+            error.classList.remove('hidden');
+            error.textContent = 'Please configure your Trello settings';
+        }
 
-    // Apply initial theme
-    applyTheme(initialSettings.theme || 'purple-blue');
+        // Apply initial theme
+        if (result.theme) {
+            applyTheme(result.theme);
+        }
+    });
 });
