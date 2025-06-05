@@ -88,12 +88,7 @@ async function fetchAndPopulateBoards(token) {
             const boardName = selectedOption.dataset.name;
             
             if (boardId) {
-                chrome.storage.local.set({ boardId, boardName }, () => {
-                    // Close settings and refresh to show new board's card
-                    document.getElementById('settings').classList.add('hidden');
-                    document.getElementById('overlay').classList.add('hidden');
-                    location.reload();
-                });
+                chrome.storage.local.set({ boardId, boardName });
             }
         });
     } catch (error) {
@@ -175,7 +170,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         const activeTheme = document.querySelector('.theme-option.active');
         const theme = activeTheme ? activeTheme.dataset.theme : 'purple-blue';
         
-        chrome.storage.local.set({ theme }, () => {
+        // Get current board selection
+        const boardSelect = document.getElementById('boardSelect');
+        const selectedOption = boardSelect.options[boardSelect.selectedIndex];
+        const boardId = boardSelect.value;
+        const boardName = selectedOption ? selectedOption.dataset.name : null;
+        
+        // Save all settings
+        chrome.storage.local.set({ theme, boardId, boardName }, () => {
             settingsPanel.classList.add('hidden');
             overlay.classList.add('hidden');
             location.reload();
