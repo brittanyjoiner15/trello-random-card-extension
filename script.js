@@ -133,6 +133,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Handle Trello authentication
     document.getElementById('authButton').addEventListener('click', authenticateWithTrello);
 
+    // Handle sign out
+    document.getElementById('signOutButton').addEventListener('click', () => {
+        chrome.storage.local.remove(['token', 'boardId', 'boardName'], () => {
+            updateAuthUI(null);
+            error.classList.remove('hidden');
+            error.textContent = 'Please configure your Trello settings';
+        });
+    });
+
     // Close settings panel
     document.getElementById('closeSettings').addEventListener('click', () => {
         settingsPanel.classList.add('hidden');
