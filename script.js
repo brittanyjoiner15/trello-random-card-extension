@@ -29,22 +29,9 @@ async function authenticateWithTrello() {
             }
             
             try {
-                // Get user's boards
-                const boardsResponse = await fetch(`https://api.trello.com/1/members/me/boards?key=${TRELLO_API_KEY}&token=${token}`);
-                const boards = await boardsResponse.json();
-                
-                // Update the board selector
-                const boardSelect = document.getElementById('boardSelect');
-                boardSelect.innerHTML = '<option value="">Select a board...</option>' + 
-                    boards.map(board => `<option value="${board.id}">${board.name}</option>`).join('');
-                
-                // Show the board selector
-                document.getElementById('boardSelector').classList.remove('hidden');
-                
-                // Handle board selection
-                boardSelect.addEventListener('change', (e) => {
-                    document.getElementById('boardId').value = e.target.value;
-                    saveSettings();
+                // Save token and update UI
+                chrome.storage.local.set({ token }, () => {
+                    updateAuthUI(token);
                 });
 
                 // Save token and update UI
@@ -71,6 +58,38 @@ async function authenticateWithTrello() {
     }
 }
 
+async function fetchAndPopulateBoards(token) {
+    try {
+        const boardsResponse = await fetch(`https://api.trello.com/1/members/me/boards?key=${TRELLO_API_KEY}&token=${token}`);
+        const boards = await boardsResponse.json();
+        
+        const boardSelect = document.getElementById('boardSelect');
+        boardSelect.innerHTML = '<option value="">Select a board...</option>' + 
+            boards.map(board => `<option value="${board.id}" data-name="${board.name}">${board.name}</option>`).join('');
+        
+        // If we have a saved board ID, select it in the dropdown
+        chrome.storage.local.get(['boardId'], (result) => {
+            if (result.boardId) {
+                boardSelect.value = result.boardId;
+            }
+        });
+
+        // Handle board selection
+        boardSelect.addEventListener('change', (e) => {
+            const selectedOption = e.target.options[e.target.selectedIndex];
+            const boardId = e.target.value;
+            const boardName = selectedOption.dataset.name;
+            
+            if (boardId) {
+                chrome.storage.local.set({ boardId, boardName });
+            }
+        });
+    } catch (error) {
+        console.error('Error fetching boards:', error);
+        document.getElementById('boardSelect').innerHTML = '<option value="">Error loading boards</option>';
+    }
+}
+
 function updateAuthUI(token) {
     const authStatus = document.getElementById('authStatus');
     const authButton = document.getElementById('authButton');
@@ -80,6 +99,7 @@ function updateAuthUI(token) {
         authStatus.classList.remove('hidden');
         authButton.classList.add('hidden');
         boardSelector.classList.remove('hidden');
+        fetchAndPopulateBoards(token);
     } else {
         authStatus.classList.add('hidden');
         authButton.classList.remove('hidden');
