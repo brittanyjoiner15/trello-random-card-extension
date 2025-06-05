@@ -88,7 +88,12 @@ async function fetchAndPopulateBoards(token) {
             const boardName = selectedOption.dataset.name;
             
             if (boardId) {
-                chrome.storage.local.set({ boardId, boardName });
+                chrome.storage.local.set({ boardId, boardName }, () => {
+                    // Close settings and refresh to show new board's card
+                    document.getElementById('settings').classList.add('hidden');
+                    document.getElementById('overlay').classList.add('hidden');
+                    location.reload();
+                });
             }
         });
     } catch (error) {
@@ -145,12 +150,23 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     });
 
+    // Handle theme selection
+    const themeOptions = document.querySelectorAll('.theme-option');
+    themeOptions.forEach(option => {
+        option.addEventListener('click', () => {
+            themeOptions.forEach(opt => opt.classList.remove('active'));
+            option.classList.add('active');
+        });
+    });
+
     // Save settings
     saveSettingsButton.addEventListener('click', () => {
-        const theme = document.querySelector('.theme-option.selected').dataset.theme;
+        const activeTheme = document.querySelector('.theme-option.active');
+        const theme = activeTheme ? activeTheme.dataset.theme : 'purple-blue';
+        
         chrome.storage.local.set({ theme }, () => {
-            settingsPanel.classList.remove('visible');
-            overlay.classList.remove('visible');
+            settingsPanel.classList.add('hidden');
+            overlay.classList.add('hidden');
             location.reload();
         });
     });
@@ -229,9 +245,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             error.textContent = 'Please configure your Trello settings';
         }
 
-        // Apply initial theme
-        if (result.theme) {
-            applyTheme(result.theme);
+            // Apply initial theme and mark theme option as active
+        const theme = result.theme || 'purple-blue';
+        applyTheme(theme);
+        const themeOption = document.querySelector(`.theme-option[data-theme="${theme}"]`);
+        if (themeOption) {
+            document.querySelectorAll('.theme-option').forEach(opt => opt.classList.remove('active'));
+            themeOption.classList.add('active');
         }
     });
 });
