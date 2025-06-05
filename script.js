@@ -1,7 +1,8 @@
 const TRELLO_API_KEY = 'c931bcb711be7cca600a6b2dfcc60f58';
 
 async function authenticateWithTrello() {
-    const authUrl = `https://trello.com/1/authorize?expiration=never&name=Random%20Card%20Extension&scope=read&response_type=token&key=${TRELLO_API_KEY}`;
+    const redirectURL = chrome.identity.getRedirectURL();
+    const authUrl = `https://trello.com/1/authorize?expiration=never&name=Random%20Card%20Extension&scope=read&response_type=token&key=${TRELLO_API_KEY}&return_url=${encodeURIComponent(redirectURL)}&callback_method=fragment`;
     
     try {
         const token = await new Promise((resolve, reject) => {
@@ -13,8 +14,9 @@ async function authenticateWithTrello() {
                     reject(chrome.runtime.lastError);
                     return;
                 }
-                // The token is in the hash of the URL
-                const token = new URLSearchParams(new URL(responseUrl).hash.substr(1)).get('token');
+                // Extract token from the response URL
+                const hashParams = new URLSearchParams(new URL(responseUrl).hash.substr(1));
+                const token = hashParams.get('token');
                 resolve(token);
             });
         });

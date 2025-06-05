@@ -7,6 +7,10 @@
     "storage",
     "identity"
   ],
+  "oauth2": {
+    "client_id": "${chrome.runtime.id}",
+    "scopes": ["https://api.trello.com/"]
+  },
   "host_permissions": [
     "https://api.trello.com/*",
     "https://trello.com/*"
