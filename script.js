@@ -156,6 +156,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         option.addEventListener('click', () => {
             themeOptions.forEach(opt => opt.classList.remove('active'));
             option.classList.add('active');
+            // Apply theme immediately for preview
+            applyTheme(option.dataset.theme);
         });
     });
 
