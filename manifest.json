@@ -4,8 +4,12 @@
   "version": "1.3",
   "description": "Displays a random card from a specified Trello board in new tabs",
   "permissions": [
-    "storage"
+    "storage",
+    "tabs"
   ],
+  "oauth": {
+    "key": "c931bcb711be7cca600a6b2dfcc60f58"
+  },
   "host_permissions": [
     "https://api.trello.com/*",
     "https://trello.com/*"

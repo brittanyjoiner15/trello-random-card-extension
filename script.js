@@ -1,48 +1,53 @@
 const TRELLO_API_KEY = 'c931bcb711be7cca600a6b2dfcc60f58';
 
 async function authenticateWithTrello() {
-    const authUrl = `https://trello.com/1/authorize?expiration=never&name=Random%20Card%20Extension&scope=read&response_type=token&key=${TRELLO_API_KEY}`;
-    
+    const extensionId = chrome.runtime.id;
+    const redirectUrl = `chrome-extension://${extensionId}/auth.html`;
+    const authUrl = `https://trello.com/1/authorize?response_type=token&key=${TRELLO_API_KEY}&return_url=${encodeURIComponent(redirectUrl)}&callback_method=fragment&scope=read&expiration=never&name=Random%20Card%20Extension`;
+
     try {
         // Open Trello authorization in a new tab
         window.open(authUrl, '_blank');
-        
-        // Show instructions to the user
-        const instructionsDiv = document.createElement('div');
-        instructionsDiv.className = 'auth-instructions';
-        instructionsDiv.innerHTML = `
-            <p>A new tab has opened with Trello's authorization page.</p>
-            <p>1. Click "Allow" in the Trello tab</p>
-            <p>2. Copy the token that appears</p>
-            <p>3. Paste it in the Token field below</p>
+
+        // Show loading message
+        const loadingDiv = document.createElement('div');
+        loadingDiv.className = 'auth-instructions';
+        loadingDiv.innerHTML = `
+            <p>Authenticating with Trello...</p>
+            <p>Please complete the authorization in the new tab.</p>
         `;
-        
-        document.getElementById('boardSelector').insertAdjacentElement('beforebegin', instructionsDiv);
-        
-        // Pre-fill the API key
-        document.getElementById('apiKey').value = TRELLO_API_KEY;
 
-        if (!token) throw new Error('No token received');
+        document.getElementById('boardSelector').insertAdjacentElement('beforebegin', loadingDiv);
 
-        // Get user's boards
-        const boardsResponse = await fetch(`https://api.trello.com/1/members/me/boards?key=${TRELLO_API_KEY}&token=${token}`);
-        const boards = await boardsResponse.json();
+        // Listen for changes in storage
+        chrome.storage.local.onChanged.addListener(async (changes) => {
+            if (changes.trelloToken && changes.trelloBoards) {
+                const token = changes.trelloToken.newValue;
+                const boards = changes.trelloBoards.newValue;
 
-        // Populate board selector
-        const boardSelect = document.getElementById('boardSelect');
-        boardSelect.innerHTML = '<option value="">Select a board...</option>' + 
-            boards.map(board => `<option value="${board.id}">${board.name}</option>`).join('');
+                // Update the board selector
+                const boardSelect = document.getElementById('boardSelect');
+                boardSelect.innerHTML = '<option value="">Select a board...</option>' +
+                    boards.map(board => `<option value="${board.id}">${board.name}</option>`).join('');
 
-        // Show board selector and handle selection
-        document.getElementById('boardSelector').classList.remove('hidden');
-        document.getElementById('apiKey').value = TRELLO_API_KEY;
-        document.getElementById('token').value = token;
+                // Show the board selector
+                document.getElementById('boardSelector').classList.remove('hidden');
 
-        boardSelect.addEventListener('change', (e) => {
-            document.getElementById('boardId').value = e.target.value;
+                // Handle board selection
+                boardSelect.addEventListener('change', (e) => {
+                    document.getElementById('boardId').value = e.target.value;
+                    // Save settings when board is selected
+                    saveSettings();
+                });
+
+                // Update the settings fields
+                document.getElementById('apiKey').value = TRELLO_API_KEY;
+                document.getElementById('token').value = token;
+
+                // Remove loading message
+                loadingDiv.remove();
+            }
         });
-
-        return { token, boards };
     } catch (error) {
         console.error('Authentication error:', error);
         document.getElementById('error').textContent = 'Authentication failed. Please try again.';
@@ -81,12 +86,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('apiKey').value = currentSettings.apiKey;
         document.getElementById('token').value = currentSettings.token;
         document.getElementById('boardId').value = currentSettings.boardId;
-        
+
         // Set active theme
         document.querySelectorAll('.theme-option').forEach(option => {
             option.classList.toggle('active', option.dataset.theme === currentSettings.theme);
         });
-        
+
         overlay.classList.remove('hidden');
         settingsPanel.classList.remove('hidden');
     });
@@ -147,13 +152,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
 
             const cards = await response.json();
-            
+
             if (cards.length === 0) {
                 throw new Error('No cards found on this board');
             }
 
             const randomCard = cards[Math.floor(Math.random() * cards.length)];
-            
+
             // Get the list name
             const listResponse = await fetch(
                 `https://api.trello.com/1/lists/${randomCard.idList}?key=${settings.apiKey}&token=${settings.token}`
@@ -164,7 +169,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
 
             const list = await listResponse.json();
-            
+
             document.getElementById('cardTitle').textContent = randomCard.name;
             document.getElementById('cardDescription').textContent = `List: ${list.name}`;
 
@@ -186,7 +191,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         error.classList.remove('hidden');
         error.textContent = 'Please configure your Trello credentials in settings';
     }
-    
+
     // Apply initial theme
     applyTheme(initialSettings.theme || 'purple-blue');
 });
