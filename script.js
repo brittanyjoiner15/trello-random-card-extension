@@ -47,9 +47,10 @@ async function authenticateWithTrello() {
                     saveSettings();
                 });
 
-                // Update the settings fields
-                document.getElementById('apiKey').value = TRELLO_API_KEY;
-                document.getElementById('token').value = token;
+                // Save token and update UI
+                chrome.storage.local.set({ token }, () => {
+                    updateAuthUI(token);
+                });
                 
                 // Remove instructions
                 instructionsDiv.remove();
@@ -80,6 +81,22 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const overlay = document.getElementById('overlay');
 
+    function updateAuthUI(token) {
+        const authStatus = document.getElementById('authStatus');
+        const authButton = document.getElementById('authButton');
+        const boardSelector = document.getElementById('boardSelector');
+
+        if (token) {
+            authStatus.classList.remove('hidden');
+            authButton.classList.add('hidden');
+            boardSelector.classList.remove('hidden');
+        } else {
+            authStatus.classList.add('hidden');
+            authButton.classList.remove('hidden');
+            boardSelector.classList.add('hidden');
+        }
+    }
+
     // Handle Trello authentication
     document.getElementById('authButton').addEventListener('click', authenticateWithTrello);
 
@@ -89,34 +106,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         overlay.classList.add('hidden');
     });
 
-    // Close on overlay click
-    overlay.addEventListener('click', () => {
-        settingsPanel.classList.add('hidden');
-        overlay.classList.add('hidden');
-    });
-
-    // Toggle settings panel
-    settingsButton.addEventListener('click', async () => {
-        const currentSettings = await loadSettings();
-        document.getElementById('apiKey').value = currentSettings.apiKey;
-        document.getElementById('token').value = currentSettings.token;
-        document.getElementById('boardId').value = currentSettings.boardId;
-
-        // Set active theme
-        document.querySelectorAll('.theme-option').forEach(option => {
-            option.classList.toggle('active', option.dataset.theme === currentSettings.theme);
-        });
-
-        overlay.classList.remove('hidden');
+    // Open settings panel
+    settingsButton.addEventListener('click', () => {
         settingsPanel.classList.remove('hidden');
-    });
+        overlay.classList.remove('hidden');
 
-    // Theme selection handling
-    document.querySelectorAll('.theme-option').forEach(option => {
-        option.addEventListener('click', () => {
-            document.querySelectorAll('.theme-option').forEach(opt => opt.classList.remove('active'));
-            option.classList.add('active');
-            applyTheme(option.dataset.theme);
+        // Update auth UI based on current token
+        chrome.storage.local.get(['token'], (result) => {
+            updateAuthUI(result.token);
         });
     });
 
