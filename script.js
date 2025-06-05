@@ -146,15 +146,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     // Save settings
-    saveSettingsButton.addEventListener('click', async () => {
-        const apiKey = document.getElementById('apiKey').value;
-        const token = document.getElementById('token').value;
-        const boardId = document.getElementById('boardId').value;
-        const activeTheme = document.querySelector('.theme-option.active')?.dataset.theme || 'purple-blue';
-
-        await chrome.storage.sync.set({ apiKey, token, boardId, theme: activeTheme });
-        settingsPanel.classList.add('hidden');
-        location.reload();
+    saveSettingsButton.addEventListener('click', () => {
+        const theme = document.querySelector('.theme-option.selected').dataset.theme;
+        chrome.storage.local.set({ theme }, () => {
+            settingsPanel.classList.remove('visible');
+            overlay.classList.remove('visible');
+            location.reload();
+        });
     });
 
     // Apply theme
