@@ -59,13 +59,20 @@ async function authenticateWithTrello() {
 }
 
 async function fetchAndPopulateBoards(token) {
+    const boardSelect = document.getElementById('boardSelect');
+    
+    // Show loading state
+    boardSelect.innerHTML = '<option value="">Loading boards...</option>';
+    boardSelect.disabled = true;
+    
     try {
         const boardsResponse = await fetch(`https://api.trello.com/1/members/me/boards?key=${TRELLO_API_KEY}&token=${token}&filter=open`);
         const boards = await boardsResponse.json();
         
-        const boardSelect = document.getElementById('boardSelect');
+        // Update with boards
         boardSelect.innerHTML = '<option value="">Select a board...</option>' + 
             boards.map(board => `<option value="${board.id}" data-name="${board.name}">${board.name}</option>`).join('');
+        boardSelect.disabled = false;
         
         // If we have a saved board ID, select it in the dropdown
         chrome.storage.local.get(['boardId'], (result) => {
@@ -86,7 +93,8 @@ async function fetchAndPopulateBoards(token) {
         });
     } catch (error) {
         console.error('Error fetching boards:', error);
-        document.getElementById('boardSelect').innerHTML = '<option value="">Error loading boards</option>';
+        boardSelect.innerHTML = '<option value="">Error loading boards</option>';
+        boardSelect.disabled = true;
     }
 }
 

@@ -261,9 +261,17 @@ h1 {
 .board-select {
     width: 100%;
     padding: 8px;
-    border: 1px solid #ddd;
+    margin-bottom: 10px;
     border-radius: 4px;
-    font-size: 14px;
+    border: 1px solid #ccc;
+}
+
+select:disabled {
+    background-color: #f5f5f5;
+    cursor: wait;
+}
+
+.board-select {
     margin-top: 5px;
     background: white;
 }
