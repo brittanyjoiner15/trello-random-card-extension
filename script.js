@@ -71,6 +71,22 @@ async function authenticateWithTrello() {
     }
 }
 
+function updateAuthUI(token) {
+    const authStatus = document.getElementById('authStatus');
+    const authButton = document.getElementById('authButton');
+    const boardSelector = document.getElementById('boardSelector');
+
+    if (token) {
+        authStatus.classList.remove('hidden');
+        authButton.classList.add('hidden');
+        boardSelector.classList.remove('hidden');
+    } else {
+        authStatus.classList.add('hidden');
+        authButton.classList.remove('hidden');
+        boardSelector.classList.add('hidden');
+    }
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
     const settingsButton = document.getElementById('settingsButton');
     const settingsPanel = document.getElementById('settings');
@@ -80,22 +96,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     const error = document.getElementById('error');
 
     const overlay = document.getElementById('overlay');
-
-    function updateAuthUI(token) {
-        const authStatus = document.getElementById('authStatus');
-        const authButton = document.getElementById('authButton');
-        const boardSelector = document.getElementById('boardSelector');
-
-        if (token) {
-            authStatus.classList.remove('hidden');
-            authButton.classList.add('hidden');
-            boardSelector.classList.remove('hidden');
-        } else {
-            authStatus.classList.add('hidden');
-            authButton.classList.remove('hidden');
-            boardSelector.classList.add('hidden');
-        }
-    }
 
     // Handle Trello authentication
     document.getElementById('authButton').addEventListener('click', authenticateWithTrello);
