@@ -1,51 +1,66 @@
 const TRELLO_API_KEY = 'c931bcb711be7cca600a6b2dfcc60f58';
 
 async function authenticateWithTrello() {
-    const extensionId = chrome.runtime.id;
-    const redirectUrl = `chrome-extension://${extensionId}/auth.html`;
-    const authUrl = `https://trello.com/1/authorize?response_type=token&key=${TRELLO_API_KEY}&return_url=${encodeURIComponent(redirectUrl)}&callback_method=fragment&scope=read&expiration=never&name=Random%20Card%20Extension`;
-
+    const authUrl = `https://trello.com/1/authorize?expiration=never&name=Random%20Card%20Extension&scope=read&response_type=token&key=${TRELLO_API_KEY}`;
+    
     try {
-        // Open Trello authorization in a new tab
-        window.open(authUrl, '_blank');
-
-        // Show loading message
-        const loadingDiv = document.createElement('div');
-        loadingDiv.className = 'auth-instructions';
-        loadingDiv.innerHTML = `
-            <p>Authenticating with Trello...</p>
-            <p>Please complete the authorization in the new tab.</p>
+        // Create and show the instructions modal
+        const instructionsDiv = document.createElement('div');
+        instructionsDiv.className = 'auth-instructions';
+        instructionsDiv.innerHTML = `
+            <p>1. Click "Allow" in the Trello popup</p>
+            <p>2. Copy the token that appears</p>
+            <p>3. Paste it below:</p>
+            <input type="text" id="tokenInput" placeholder="Paste your token here" class="token-input" />
+            <button id="submitToken" class="submit-token">Submit Token</button>
         `;
-
-        document.getElementById('boardSelector').insertAdjacentElement('beforebegin', loadingDiv);
-
-        // Listen for changes in storage
-        chrome.storage.local.onChanged.addListener(async (changes) => {
-            if (changes.trelloToken && changes.trelloBoards) {
-                const token = changes.trelloToken.newValue;
-                const boards = changes.trelloBoards.newValue;
-
+        
+        document.getElementById('boardSelector').insertAdjacentElement('beforebegin', instructionsDiv);
+        
+        // Open Trello authorization in a popup
+        const popup = window.open(authUrl, 'TrelloAuth', 'width=500,height=600');
+        
+        // Handle token submission
+        document.getElementById('submitToken').addEventListener('click', async () => {
+            const token = document.getElementById('tokenInput').value.trim();
+            if (!token) {
+                alert('Please paste your Trello token');
+                return;
+            }
+            
+            try {
+                // Get user's boards
+                const boardsResponse = await fetch(`https://api.trello.com/1/members/me/boards?key=${TRELLO_API_KEY}&token=${token}`);
+                const boards = await boardsResponse.json();
+                
                 // Update the board selector
                 const boardSelect = document.getElementById('boardSelect');
-                boardSelect.innerHTML = '<option value="">Select a board...</option>' +
+                boardSelect.innerHTML = '<option value="">Select a board...</option>' + 
                     boards.map(board => `<option value="${board.id}">${board.name}</option>`).join('');
-
+                
                 // Show the board selector
                 document.getElementById('boardSelector').classList.remove('hidden');
-
+                
                 // Handle board selection
                 boardSelect.addEventListener('change', (e) => {
                     document.getElementById('boardId').value = e.target.value;
-                    // Save settings when board is selected
                     saveSettings();
                 });
 
                 // Update the settings fields
                 document.getElementById('apiKey').value = TRELLO_API_KEY;
                 document.getElementById('token').value = token;
-
-                // Remove loading message
-                loadingDiv.remove();
+                
+                // Remove instructions
+                instructionsDiv.remove();
+                
+                // Close the popup if it's still open
+                if (popup && !popup.closed) {
+                    popup.close();
+                }
+            } catch (error) {
+                console.error('Error fetching boards:', error);
+                alert('Invalid token. Please try again.');
             }
         });
     } catch (error) {

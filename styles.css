@@ -176,6 +176,38 @@ h1 {
     font-size: 14px;
 }
 
+.token-input {
+    width: 100%;
+    padding: 8px 12px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.token-input:focus {
+    border-color: #026AA7;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(2, 106, 167, 0.2);
+}
+
+.submit-token {
+    width: 100%;
+    padding: 8px 12px;
+    background: #026AA7;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.submit-token:hover {
+    background: #055A8C;
+    transform: translateY(-1px);
+}
+
 .auth-button {
     display: flex;
     align-items: center;
